@@ -102,7 +102,7 @@
         [thumb setTransform:CGAffineTransformMakeRotation(degreesToRadians((perSectionDegrees + kRotationDegrees)))];
         if (i==0) {
             deltaAngle= degreesToRadians(360 - kRotationDegrees) + atan2(thumb.transform.a, thumb.transform.b);
-            [thumb.iconView setIsSelected:YES];
+//            [thumb.iconView setIsSelected:YES];
             self.recognizer.currentThumb = thumb;
         }
        
