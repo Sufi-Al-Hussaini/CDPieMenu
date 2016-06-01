@@ -57,6 +57,10 @@
    // circle that represents the rotation gesture.
 
     CDCircle *view = (CDCircle *) [self view];
+    if (view.rotate == NO) {
+        return;
+    }
+    
    CGPoint center = CGPointMake(CGRectGetMidX([view bounds]), CGRectGetMidY([view bounds]));
    CGPoint currentTouchPoint = [touch locationInView:view];
    CGPoint previousTouchPoint = [touch previousLocationInView:view];
@@ -69,7 +73,21 @@
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-   // Perform final check to make sure a tap was not misinterpreted.
+    CDCircle *view = (CDCircle *) [self view];
+    if (view.rotate == NO) {
+        UITouch *touch = [touches anyObject];
+        
+        for (CDCircleThumb *thumb in view.thumbs) {
+            
+            CGPoint touchPoint = [touch locationInView:thumb];
+            if (CGPathContainsPoint(thumb.arc.CGPath, NULL, touchPoint, NULL)) {
+                [view.delegate circle:view didMoveToSegment:thumb.tag thumb:thumb];
+            }
+        }
+        return;
+    }
+
+    // Perform final check to make sure a tap was not misinterpreted.
    if ([self state] == UIGestureRecognizerStateChanged) {
     
        

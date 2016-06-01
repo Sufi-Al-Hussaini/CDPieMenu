@@ -31,6 +31,7 @@ typedef enum {
 @property (nonatomic, strong) UIBezierPath *circle;
 @property (nonatomic, strong) UIBezierPath *path;
 @property (nonatomic, assign) BOOL inertiaeffect;
+@property (nonatomic, assign) BOOL rotate;
 @property (nonatomic, strong) CDCircleGestureRecognizer *recognizer;
 @property (assign) int numberOfSegments;
 @property (nonatomic, strong) UIColor *separatorColor;

@@ -21,7 +21,8 @@
     CDCircle *circle = [[CDCircle alloc] initWithFrame:CGRectMake(10 , 90, 300, 300) numberOfSegments:40 ringWidth:80.f];
     circle.dataSource = self;
     circle.delegate = self;
-    CDCircleOverlayView *overlay = [[CDCircleOverlayView alloc] initWithCircle:circle];
+    circle.rotate = NO;
+//    CDCircleOverlayView *overlay = [[CDCircleOverlayView alloc] initWithCircle:circle];
     
     
     
@@ -81,7 +82,7 @@
     
     [self.view addSubview:circle];
     //Overlay cannot be subview of a circle because then it would turn around with the circle
-    [self.view addSubview:overlay];
+//    [self.view addSubview:overlay];
 }
 
 - (void)viewDidUnload
