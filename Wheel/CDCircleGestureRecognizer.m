@@ -46,13 +46,47 @@
    } else {
       [self setState:UIGestureRecognizerStateChanged];
    }
+    
+    CDCircle *view = (CDCircle *) [self view];
+    if (view.rotate == NO) {
+        return;
+    }
+    
+    // We can look at any touch object since we know we
+    // have only 1. If there were more than 1 then
+    // touchesBegan:withEvent: would have failed the recognizer.
+    UITouch *touch = [touches anyObject];
+    
+    // To rotate with one finger, we simulate a second finger.
+    // The second figure is on the opposite side of the virtual
+    // circle that represents the rotation gesture.
+    CGPoint center = CGPointMake(CGRectGetMidX([view bounds]), CGRectGetMidY([view bounds]));
+    CGPoint currentTouchPoint = [touch locationInView:view];
+    CGPoint previousTouchPoint = [touch previousLocationInView:view];
+    previousTouchDate = [NSDate date];
+    CGFloat angleInRadians = atan2f(currentTouchPoint.y - center.y, currentTouchPoint.x - center.x) - atan2f(previousTouchPoint.y - center.y, previousTouchPoint.x - center.x);
+    [self setRotation:angleInRadians];
+    currentTransformAngle = atan2f(view.transform.b, view.transform.a);
+
+
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-       CDCircle *view = (CDCircle *)[self view];
-       UITouch *touch = [touches anyObject];
-       
+        CDCircle *view = (CDCircle *) [self view];
+        UITouch *touch = [touches anyObject];
+        if (view.rotate == NO) {
+            
+            for (CDCircleThumb *thumb in view.thumbs) {
+                
+                CGPoint touchPoint = [touch locationInView:thumb];
+                if (CGPathContainsPoint(thumb.arc.CGPath, NULL, touchPoint, NULL)) {
+                    [view.delegate circle:view didMoveToSegment:thumb.tag thumb:thumb];
+                }
+            }
+            return;
+        }
+    
        for (CDCircleThumb *thumb in view.thumbs) {
            
            CGPoint touchPoint = [touch locationInView:thumb];
